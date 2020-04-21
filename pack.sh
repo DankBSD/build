@@ -40,7 +40,7 @@ cp -r $ROOT/boot $BSDIR/
 rm $BSDIR/boot/kernel/iwm* $BSDIR/boot/kernel/iwn* $BSDIR/boot/kernel/isp* $BSDIR/boot/kernel/ath* \
 	$BSDIR/boot/kernel/rtwn* $BSDIR/boot/kernel/if_* $BSDIR/boot/kernel/sfxg* $BSDIR/boot/kernel/pmspcv* \
 	$BSDIR/boot/kernel/t*fw_* $BSDIR/boot/kernel/mlx4* $BSDIR/boot/kernel/mlx5*
-rm -r $BSDIR/boot/modules
+rm -r $BSDIR/boot/modules $BSDIR/boot/firmware $BSDIR/boot/userboot* $BSDIR/boot/*.efi
 cp $ROOT/etc/fstab $BSDIR/etc/
 makefs -B little -o label=DankBSD_Live_Bootstrap -o version=2 -o optimization=space $BSIMAGE $BSDIR
 rm -rf $BSDIR
