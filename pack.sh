@@ -11,22 +11,10 @@
 : "${OUTPUTDIR:=/tmp}"
 : "${OUTPUT:=$OUTPUTDIR/DankBSD-$(date '+%Y-%m-%d-%H-%M-%S').img}"
 
-make_esp_file $EFIIMAGE 1024 $ROOT/boot/loader.efi
-
+cp src/32-dank.sh src/99-dank.sh "$ROOT/usr/local/etc/runit/core-services/"
 echo '/dev/gpt/dank-live-zip.uzip / ufs ro 1 1' > $ROOT/etc/fstab
-echo 'proc /proc procfs rw 0 0' >> $ROOT/etc/fstab
-echo 'fdescfs /dev/fd fdescfs rw 0 0' >> $ROOT/etc/fstab
-echo 'tmpfs /tmp tmpfs rw 0 0' >> $ROOT/etc/fstab
-echo 'tmpfs /root tmpfs rw 0 0' >> $ROOT/etc/fstab
-echo 'tmpfs /home tmpfs rw 0 0' >> $ROOT/etc/fstab
-writable_dir() {
-	mkdir -p "$ROOT/tmp-live$1"
-	echo "tmpfs /tmp-live$1 tmpfs rw 0 0" >> $ROOT/etc/fstab
-	echo "/tmp-live$1 $1 unionfs rw,noatime 0 0" >> $ROOT/etc/fstab
-}
-writable_dir /etc
-writable_dir /var
-writable_dir /usr
+
+make_esp_file $EFIIMAGE 1024 $ROOT/boot/loader.efi
 
 makefs -B little -o label=DankBSD_Live -o version=2 -o optimization=space $FSIMAGE $ROOT
 mkuzip -A zstd -C 15 -s 32768 -d -S -o $ZIPIMAGE $FSIMAGE

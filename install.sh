@@ -72,5 +72,3 @@ runit_service getty-ttyv5
 runit_service openntpd
 runit_service dbus
 runit_service zfsd
-
-cp src/99-dank.sh "$ROOT/usr/local/etc/runit/core-services/"
