@@ -14,15 +14,16 @@ pkg -r $ROOT install --no-repo-update \
 	pkg \
 	drm-devel-kmod iichid openzfs openzfs-kmod \
 	runit-faster u2f-devd powerdxx devcpu-data \
-	openssh-portable mosh openntpd \
-	wget curl iperf3 socat rsync \
+	openssh-portable mosh openntpd dhcpcd wpa_supplicant \
+	wget curl iperf3 socat rsync git \
 	zsh zsh-completions zsh-syntax-highlighting bash fish tmux htop tree pstree ncdu lsof lscpu kakoune fzy fd-find ripgrep hexyl jq srm doas \
-	xkeyboard-config evdev-proto libinput evemu evhz drm_info \
+	xkeyboard-config evdev-proto libinput py38-evdev evemu evhz drm_info \
 	fira firacode cantarell-fonts comic-neue adwaita-icon-theme xdg-utils shared-mime-info bsdisks \
 	wayfire wf-shell alacritty wl-clipboard wev grim slurp \
-	gnome-terminal nautilus file-roller gedit eog evince gnome-usage gnome-system-monitor d-feet dconf-editor gnome-maps gnome-weather celluloid minder-app simple-scan seahorse epiphany
+	gnome-terminal nautilus file-roller gedit eog evince gnome-system-monitor cpu-x d-feet dconf-editor \
+	gnome-maps gnome-weather celluloid minder-app simple-scan seahorse gucharmap gitg meld lollypop epiphany
 
-mkdir -p $ROOT/proc $ROOT/home
+mkdir -p $ROOT/proc $ROOT/media $ROOT/home
 
 # pkg -r is not good at running post-install. but chroot doesn't see repos outside..
 cp $ROOT/usr/local/etc/pkg.conf.sample $ROOT/usr/local/etc/pkg.conf
@@ -48,8 +49,12 @@ touch $ROOT/var/log/messages $ROOT/var/log/security $ROOT/var/log/auth.log $ROOT
 # runit scripts mount tmpfs over there
 rm -rf $ROOT/var/run/*
 
-# bsd sed doesn't do that kind of append
+# PAM. note: bsd sed doesn't do that kind of append
 gsed -i '/^session.*include.*system/a session		optional	pam_ck_connector.so' $ROOT/etc/pam.d/login
+
+# libinput
+mkdir -p $ROOT/usr/local/etc/libinput
+cp src/libinput-quirks.conf $ROOT/usr/local/etc/libinput/local-overrides.quirks
 
 echo dankbsd-live > "$ROOT/usr/local/etc/runit/hostname"
 ln -sf default "$ROOT/usr/local/etc/runit/runsvdir/current"

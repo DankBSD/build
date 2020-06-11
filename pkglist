@@ -6,6 +6,7 @@ benchmarks/iperf3
 deskutils/bookworm
 deskutils/gnome-maps
 deskutils/gnome-weather
+deskutils/gucharmap
 devel/d-feet
 devel/dconf-editor
 devel/evemu
@@ -14,6 +15,7 @@ devel/git-cinnabar
 devel/git-delta
 devel/gitg
 devel/tig
+devel/py-evdev
 editors/gedit
 editors/gedit-plugins
 editors/kakoune
@@ -41,6 +43,7 @@ multimedia/pitivi
 multimedia/webcamd
 multimedia/wf-recorder
 net/avahi-app
+net/dhcpcd
 net/mosh
 net/openntpd
 net/remmina
@@ -52,6 +55,7 @@ net/socat
 print/cups
 print/cups-filters
 russian/hunspell
+security/wpa_supplicant
 security/doas
 security/openssh-portable
 security/seahorse

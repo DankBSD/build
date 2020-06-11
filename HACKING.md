@@ -4,7 +4,7 @@
 
 ### Base build
 
-https://github.com/myfreeweb/freebsd in `/usr/src`
+https://github.com/DankBSD/base in `/usr/src`
 
 ```sh
 doas nice -n20 cpuset -l0-14 time make -j14 buildkernel buildworld KERNCONF=DANK
@@ -13,7 +13,7 @@ doas nice -n20 cpuset -l0-14 time make -j14 packages KERNCONF=DANK
 
 ### Ports build
 
-https://github.com/myfreeweb/freebsd-ports-dank in `/usr/ports`, see below for Poudriere setup
+https://github.com/DankBSD/ports in `/usr/ports`, see below for Poudriere setup
 
 make.conf from this repo in `/usr/local/etc/poudriere.d`
 
@@ -64,8 +64,16 @@ Disable all other repos.
 ### Poudriere jail setup with no compiler in base
 
 ```sh
-doas poudriere jail -c -j dank-2020-04 -m src=/usr/src -v 13.0-CURRENT
-doas pkg -r /usr/local/poudriere/jails/dank-2020-04/ install llvm10
-doas zfs destroy ruunvald-nvme/poudriere/jails/dank-2020-04@clean
-doas zfs snapshot ruunvald-nvme/poudriere/jails/dank-2020-04@clean
+doas poudriere jail -c -j $JAILNAME -m src=/usr/src -v 13.0-CURRENT
+doas pkg -r /usr/local/poudriere/jails/$JAILNAME/ install -y llvm10
+doas pkg -r /usr/local/poudriere/jails/$JAILNAME/ remove -yf gettext-runtime indexinfo libffi libxml2 lua52 perl5 python37 readline
+doas zfs destroy ruunvald-nvme/poudriere/jails/$JAILNAME@clean
+doas zfs snapshot ruunvald-nvme/poudriere/jails/$JAILNAME@clean
 ```
+
+The problem with installing pkgs in the jail is that poudriere builds would use them,
+and if they don't match what's built, lots of stuff would get rebuilt everytime because
+the built packages depend on wrong things. (e.g. on an older version of `gettext-runtime`.)
+So you have to keep them up to date.
+Fortunately, all of llvm's dependencies are only for lldb and stuff, not clang, so we can
+just force delete them :) and the only package you have to keep up to date is llvm.

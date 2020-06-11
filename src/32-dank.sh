@@ -5,6 +5,8 @@ echo "=> Mounting ramdisks for live system"
 
 mount -t tmpfs tmpfs /tmp
 
+mount -t tmpfs tmpfs /media
+
 mount -t tmpfs tmpfs /home
 
 mount -t tmpfs tmpfs /root
