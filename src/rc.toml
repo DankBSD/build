@@ -1,0 +1,77 @@
+hostname = "dankbsd-live"
+
+[sysctl.hw]
+acpi.cpu.cx_lowest = "C8"
+snd.latency = 5
+
+[sysctl.vm]
+pageout_oom_seq = 6
+pfault_oom_wait = 3
+
+[sysctl.kern]
+sched = { preempt_thresh = 200, interact = 15 }
+shutdown = { poweroff_delay = 1000, kproc_shutdown_wait = 15 }
+elf64.aslr = { stack_gap = 0, pie_enable = 1, enable = 1 }
+randompid = 1
+random.harvest.mask = 511
+
+[sysctl.security.bsd]
+see_other_gids = 0
+see_other_uids = 0
+stack_guard_page = 1
+unprivileged_proc_debug = 0
+unprivileged_read_msgbuf = 0
+hardlink_check_gid = 1
+hardlink_check_uid = 1
+
+[sysctl.net.inet]
+ip = { check_interface = 1, random_id = 1, redirect = 0 }
+tcp = { blackhole = 2, drop_synfin = 1, icmp_may_rst = 0 }
+udp = { blackhole = 1 }
+icmp = { drop_redirect = 1 }
+
+[service.getty-ttyv0]
+precmd = "export TERM=xterm"
+cmd = "/usr/libexec/getty Pc ttyv0"
+postcmd = "utmpset -w ttyv0"
+
+[service.getty-ttyv1]
+precmd = "export TERM=xterm"
+cmd = "/usr/libexec/getty Pc ttyv1"
+postcmd = "utmpset -w ttyv1"
+
+[service.getty-ttyv2]
+precmd = "export TERM=xterm"
+cmd = "/usr/libexec/getty Pc ttyv2"
+postcmd = "utmpset -w ttyv2"
+
+[service.getty-ttyv3]
+precmd = "export TERM=xterm"
+cmd = "/usr/libexec/getty Pc ttyv3"
+postcmd = "utmpset -w ttyv3"
+
+[service.getty-ttyv4]
+precmd = "export TERM=xterm"
+cmd = "/usr/libexec/getty Pc ttyv4"
+postcmd = "utmpset -w ttyv4"
+
+[service.getty-ttyv5]
+precmd = "export TERM=xterm"
+cmd = "/usr/libexec/getty Pc ttyv5"
+postcmd = "utmpset -w ttyv5"
+
+[service.devd]
+cmd = "/sbin/devd -d &>/dev/null"
+
+[service.syslogd]
+cmd = "/usr/sbin/syslogd -F -ss"
+
+[service.dhcpcd]
+cmd = "/usr/local/sbin/dhcpcd -B &>/dev/null"
+
+[service.dbus]
+precmd = """
+/usr/local/bin/dbus-uuidgen --ensure
+mkdir -p /var/run/dbus
+"""
+cmd = "/usr/local/bin/dbus-daemon --system --nofork --nopidfile &>/dev/null"

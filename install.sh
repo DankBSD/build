@@ -46,7 +46,7 @@ echo 'permit setenv { HOME LC_ALL TERM XDG_RUNTIME_DIR WAYLAND_DISPLAY } :wheel'
 # syslogd complains if they don't already exist
 touch $ROOT/var/log/messages $ROOT/var/log/security $ROOT/var/log/auth.log $ROOT/var/log/maillog $ROOT/var/log/cron $ROOT/var/log/debug.log $ROOT/var/log/daemon.log $ROOT/var/log/ppp.log
 
-# runit scripts mount tmpfs over there
+# we mount tmpfs over there
 rm -rf $ROOT/var/run/*
 
 # PAM. note: bsd sed doesn't do that kind of append
@@ -56,24 +56,9 @@ gsed -i '/^session.*include.*system/a session		optional	pam_ck_connector.so' $RO
 mkdir -p $ROOT/usr/local/etc/libinput
 cp src/libinput-quirks.conf $ROOT/usr/local/etc/libinput/local-overrides.quirks
 
-echo dankbsd-live > "$ROOT/usr/local/etc/runit/hostname"
-ln -sf default "$ROOT/usr/local/etc/runit/runsvdir/current"
-cp "$ROOT/usr/local/etc/runit/logger.sample" "$ROOT/usr/local/etc/runit/logger"
-
-runit_service() {
-	ln -sf "/usr/local/etc/sv/$1" "$ROOT/usr/local/etc/runit/runsvdir/default/$1"
-}
-
-runit_service syslogd
-runit_service adjkerntz
-runit_service devd
-# runit_service getty-ttyu0
-runit_service getty-ttyv0
-runit_service getty-ttyv1
-runit_service getty-ttyv2
-runit_service getty-ttyv3
-runit_service getty-ttyv4
-runit_service getty-ttyv5
-runit_service openntpd
-runit_service dbus
-runit_service zfsd
+# runit+configurate
+mkdir -p $ROOT/var/service
+ln -sf ../var/run/os-release "$ROOT/etc/os-release"
+cp src/rc.toml "$ROOT/etc/rc.toml"
+cp ../configurate/target/release/configurate "$ROOT/usr/local/sbin/"
+# TODO: package configurate when it gets more mature
