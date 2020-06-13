@@ -8,13 +8,13 @@ mkdir $ROOT
 pkg -r $ROOT update -f
 pkg -r $ROOT install --no-repo-update \
 	FreeBSD-bootloader FreeBSD-kernel-dank FreeBSD-runtime \
-	FreeBSD-acpi FreeBSD-autofs FreeBSD-bhyve FreeBSD-ipfw FreeBSD-jail FreeBSD-wpa \
+	FreeBSD-acpi FreeBSD-autofs FreeBSD-bhyve FreeBSD-ipfw FreeBSD-jail \
 	FreeBSD-libbegemot FreeBSD-libblocksruntime FreeBSD-libbsdstat FreeBSD-libcuse FreeBSD-libcompiler_rt FreeBSD-libexecinfo
 pkg -r $ROOT install --no-repo-update \
 	pkg \
 	drm-devel-kmod iichid openzfs openzfs-kmod \
 	runit-faster u2f-devd powerdxx devcpu-data \
-	openssh-portable mosh openntpd dhcpcd wpa_supplicant \
+	openssh-portable mosh openntpd dhcpcd wpa_supplicant avahi-app \
 	wget curl iperf3 socat rsync git \
 	zsh zsh-completions zsh-syntax-highlighting bash fish tmux htop tree pstree ncdu lsof lscpu kakoune fzy fd-find ripgrep hexyl jq srm doas \
 	xkeyboard-config evdev-proto libinput py38-evdev evemu evhz drm_info \
@@ -28,6 +28,7 @@ mkdir -p $ROOT/proc $ROOT/media $ROOT/home
 # pkg -r is not good at running post-install. but chroot doesn't see repos outside..
 cp $ROOT/usr/local/etc/pkg.conf.sample $ROOT/usr/local/etc/pkg.conf
 cp $ROOT/usr/local/etc/fonts/fonts.conf.sample $ROOT/usr/local/etc/fonts/fonts.conf
+cp $ROOT/usr/local/share/examples/dhcpcd/dhcpcd.conf $ROOT/usr/local/etc/
 chroot $ROOT env LD_LIBRARY_PATH=/usr/local/lib update-mime-database /usr/local/share/mime
 chroot $ROOT env LD_LIBRARY_PATH=/usr/local/lib glib-compile-schemas /usr/local/share/glib-2.0/schemas
 chroot $ROOT env LD_LIBRARY_PATH=/usr/local/lib gdk-pixbuf-query-loaders --update-cache

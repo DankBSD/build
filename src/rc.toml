@@ -61,17 +61,21 @@ cmd = "/usr/libexec/getty Pc ttyv5"
 postcmd = "utmpset -w ttyv5"
 
 [service.devd]
-cmd = "/sbin/devd -d &>/dev/null"
+cmd = "/sbin/devd -d -l 69"
 
 [service.syslogd]
 cmd = "/usr/sbin/syslogd -F -ss"
 
 [service.dhcpcd]
-cmd = "/usr/local/sbin/dhcpcd -B &>/dev/null"
+cmd = "/usr/local/sbin/dhcpcd -B"
+
+[service.wpa]
+precmd = "/usr/local/sbin/sv check dbus >/dev/null || exit 1"
+cmd = "/usr/local/sbin/wpa_supplicant -s -u -M '-iwlan*'"
 
 [service.dbus]
 precmd = """
 /usr/local/bin/dbus-uuidgen --ensure
 mkdir -p /var/run/dbus
 """
-cmd = "/usr/local/bin/dbus-daemon --system --nofork --nopidfile &>/dev/null"
+cmd = "/usr/local/bin/dbus-daemon --system --nofork --nopidfile"

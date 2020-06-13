@@ -14,8 +14,8 @@ devel/git
 devel/git-cinnabar
 devel/git-delta
 devel/gitg
-devel/tig
 devel/py-evdev
+devel/tig
 editors/gedit
 editors/gedit-plugins
 editors/kakoune
@@ -31,6 +31,7 @@ graphics/evince
 graphics/minder
 graphics/mypaint
 graphics/simple-scan
+lang/execline
 mail/geary
 multimedia/celluloid
 multimedia/ffmpeg
@@ -50,17 +51,16 @@ net/remmina
 net/remmina-plugin-rdp
 net/remmina-plugin-vnc
 net/rsync
-sysutils/tracker-miners
 net/socat
 print/cups
 print/cups-filters
 russian/hunspell
-security/wpa_supplicant
 security/doas
 security/openssh-portable
 security/seahorse
 security/srm
 security/u2f-devd
+security/wpa_supplicant
 shells/bash
 shells/fish
 shells/zsh
@@ -89,6 +89,7 @@ sysutils/pstree
 sysutils/pwgen
 sysutils/runit-faster
 sysutils/tmux
+sysutils/tracker-miners
 sysutils/tree
 sysutils/upower
 textproc/en-hunspell

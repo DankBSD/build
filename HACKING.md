@@ -77,3 +77,18 @@ the built packages depend on wrong things. (e.g. on an older version of `gettext
 So you have to keep them up to date.
 Fortunately, all of llvm's dependencies are only for lldb and stuff, not clang, so we can
 just force delete them :) and the only package you have to keep up to date is llvm.
+
+### Updating headers in poudriere
+
+After updating and rebuilding the kernel, sync new includes and src into the jail:
+
+```sh
+doas rsync -a --exclude=.git --exclude='*.core' --verbose /usr/obj/usr/src/amd64.amd64/worldstage/usr/include/ /usr/local/poudriere/jails/$JAILNAME/usr/include
+doas rsync -a --exclude=.git --exclude='*.core' --verbose /usr/src/ /usr/local/poudriere/jails/$JAILNAME/usr/src/
+```
+
+And delete kmods to rebuild them e.g.:
+
+```sh
+doas rm /usr/local/poudriere/data/packages/$JAILNAME-default/All/{drm-devel-kmod*,openzfs-kmod*,iichid*}
+```
