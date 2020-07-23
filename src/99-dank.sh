@@ -45,12 +45,9 @@ $DIALOG_OK)
 	echo 'binding_term = <super> KEY_ENTER' >> ~live/.config/wayfire.ini
 	echo 'command_term = gnome-terminal' >> ~live/.config/wayfire.ini
 
-	# Set big vt font and 2x gui scale if the first active connector is HiDPI
+	# Set 2x gui scale if the first active connector is HiDPI
 	if [ x`drm_info -j | jq -r '."/dev/dri/card0".connectors | map(select(.status == 1))[0] as $d | (pow($d.modes[0].hdisplay; 2) + pow($d.modes[0].vdisplay; 2) | sqrt) / (pow($d.phy_width / 25.4; 2) + pow($d.phy_height / 25.4; 2) | sqrt) > 120'` = xtrue ]; then
-		for ttyv in /dev/ttyv*; do
-			vidcontrol -f terminus-b32 < ${ttyv} > ${ttyv}
-		done
-		# just guess common names.. drm_info doesn't give us an actual names and trying to derive it would be too much work
+		# just guess common names.. drm_info doesn't give us an actual name and trying to derive it would be too much work
 		echo '[eDP-1]' >> ~live/.config/wayfire.ini
 		echo 'scale = 2' >> ~live/.config/wayfire.ini
 		echo '[DP-1]' >> ~live/.config/wayfire.ini

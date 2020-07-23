@@ -9,7 +9,8 @@ pkg -r $ROOT update -f
 pkg -r $ROOT install --no-repo-update \
 	FreeBSD-bootloader FreeBSD-kernel-dank FreeBSD-runtime \
 	FreeBSD-acpi FreeBSD-autofs FreeBSD-bhyve FreeBSD-ipfw FreeBSD-jail \
-	FreeBSD-libbegemot FreeBSD-libblocksruntime FreeBSD-libbsdstat FreeBSD-libcuse FreeBSD-libcompiler_rt FreeBSD-libexecinfo
+	FreeBSD-libbegemot FreeBSD-libblocksruntime FreeBSD-libbsdstat FreeBSD-libcuse FreeBSD-libcompiler_rt FreeBSD-libexecinfo \
+	FreeBSD-clibs-dev FreeBSD-libcompiler_rt-dev FreeBSD-libexecinfo-dev FreeBSD-runtime-dev FreeBSD-utilities-dev
 pkg -r $ROOT install --no-repo-update \
 	pkg \
 	drm-devel-kmod iichid openzfs openzfs-kmod \
@@ -21,21 +22,23 @@ pkg -r $ROOT install --no-repo-update \
 	fira firacode cantarell-fonts comic-neue adwaita-icon-theme xdg-utils shared-mime-info bsdisks \
 	wayfire wf-shell alacritty wl-clipboard wev grim slurp \
 	gnome-terminal nautilus file-roller gedit eog evince gnome-system-monitor cpu-x d-feet dconf-editor \
-	gnome-maps gnome-weather celluloid minder-app simple-scan seahorse gucharmap gitg meld lollypop epiphany
+	gnome-maps gnome-weather celluloid simple-scan seahorse gucharmap gitg meld lollypop epiphany \
+	remmina-plugin-rdp remmina-plugin-vnc
 
 mkdir -p $ROOT/proc $ROOT/media $ROOT/home
 
 # pkg -r is not good at running post-install. but chroot doesn't see repos outside..
 cp $ROOT/usr/local/etc/pkg.conf.sample $ROOT/usr/local/etc/pkg.conf
+cp $ROOT/usr/local/etc/ntpd.conf.sample $ROOT/usr/local/etc/ntpd.conf
+cp $ROOT/usr/local/etc/ssh/sshd_config.sample $ROOT/usr/local/etc/ssh/sshd_config
 cp $ROOT/usr/local/etc/fonts/fonts.conf.sample $ROOT/usr/local/etc/fonts/fonts.conf
 cp $ROOT/usr/local/share/examples/dhcpcd/dhcpcd.conf $ROOT/usr/local/etc/
 chroot $ROOT env LD_LIBRARY_PATH=/usr/local/lib update-mime-database /usr/local/share/mime
 chroot $ROOT env LD_LIBRARY_PATH=/usr/local/lib glib-compile-schemas /usr/local/share/glib-2.0/schemas
 chroot $ROOT env LD_LIBRARY_PATH=/usr/local/lib gdk-pixbuf-query-loaders --update-cache
 
-# XXX: this was necessary for alacritty (but not on my dev desktop wtf)
-mkdir -p $ROOT/etc/fonts
-cp $ROOT/usr/local/etc/fonts/fonts.conf.sample $ROOT/etc/fonts/fonts.conf
+# XXX: this was necessary for alacritty, only on live usb o_0
+ln -sf /usr/local/etc/fonts "$ROOT/etc/fonts"
 
 # root
 chroot $ROOT chsh -s /usr/local/bin/zsh root
@@ -58,8 +61,9 @@ mkdir -p $ROOT/usr/local/etc/libinput
 cp src/libinput-quirks.conf $ROOT/usr/local/etc/libinput/local-overrides.quirks
 
 # runit+configurate
-mkdir -p $ROOT/var/service
+ln -sf run/it "$ROOT/var/service"
 ln -sf ../var/run/os-release "$ROOT/etc/os-release"
+ln -sf ../var/run/localtime "$ROOT/etc/localtime"
 cp src/rc.toml "$ROOT/etc/rc.toml"
 cp ../configurate/target/release/configurate "$ROOT/usr/local/sbin/"
 # TODO: package configurate when it gets more mature

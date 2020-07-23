@@ -13,7 +13,7 @@ mount -t tmpfs tmpfs /root
 cp /usr/share/skel/dot.zshrc /root/.zshrc
 
 copy_tmpfs() {
-	cp -r $1 /tmp/
+	cp -a $1 /tmp/
 	mount -t tmpfs tmpfs $1
 	mv /tmp$1/* $1/
 	rm -rf /tmp$1

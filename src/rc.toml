@@ -1,4 +1,5 @@
 hostname = "dankbsd-live"
+kld = ["iichid"]
 
 [sysctl.hw]
 acpi.cpu.cx_lowest = "C8"
@@ -61,7 +62,7 @@ cmd = "/usr/libexec/getty Pc ttyv5"
 postcmd = "utmpset -w ttyv5"
 
 [service.devd]
-cmd = "/sbin/devd -d -l 69"
+cmd = "/sbin/devd -dql 69"
 
 [service.syslogd]
 cmd = "/usr/sbin/syslogd -F -ss"
