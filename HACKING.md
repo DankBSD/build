@@ -18,7 +18,7 @@ https://github.com/DankBSD/ports in `/usr/ports`, see below for Poudriere setup
 make.conf from this repo in `/usr/local/etc/poudriere.d`
 
 ```sh
-doas cpuset -l0-14 nice -n20 poudriere bulk -j dank-2020-04 -f pkglist
+doas cpuset -l0-14 nice -n20 poudriere bulk -j dank-2020-09 -f pkglist
 ```
 
 ### pkg setup
@@ -30,7 +30,7 @@ DankBSD-base-local: {
   enabled: yes
 }
 DankBSD-local: {
-  url: "file:///usr/local/poudriere/data/packages/dank-2020-04-default",
+  url: "file:///usr/local/poudriere/data/packages/dank-2020-09-default",
   mirror_type: "none",
   priority: 0,
   enabled: yes,
@@ -65,8 +65,8 @@ Disable all other repos.
 
 ```sh
 doas poudriere jail -c -j $JAILNAME -m src=/usr/src -v 13.0-CURRENT
-doas pkg -r /usr/local/poudriere/jails/$JAILNAME/ install -y llvm10
-doas pkg -r /usr/local/poudriere/jails/$JAILNAME/ remove -yf gettext-runtime indexinfo libffi libxml2 lua52 perl5 python37 readline
+doas pkg -r /usr/local/poudriere/jails/$JAILNAME/ install -y llvm11
+doas pkg -r /usr/local/poudriere/jails/$JAILNAME/ remove -yf gettext-runtime indexinfo libffi libxml2 lua52 openssl perl5 python37 readline
 doas zfs destroy ruunvald-nvme/poudriere/jails/$JAILNAME@clean
 doas zfs snapshot ruunvald-nvme/poudriere/jails/$JAILNAME@clean
 ```
@@ -75,8 +75,9 @@ The problem with installing pkgs in the jail is that poudriere builds would use 
 and if they don't match what's built, lots of stuff would get rebuilt everytime because
 the built packages depend on wrong things. (e.g. on an older version of `gettext-runtime`.)
 So you have to keep them up to date.
-Fortunately, all of llvm's dependencies are only for lldb and stuff, not clang, so we can
-just force delete them :) and the only package you have to keep up to date is llvm.
+Fortunately, nearly all of llvm's dependencies are only for lldb and stuff, not clang, so we can
+just force delete them :) and the only package you have to keep up to date is LLVM.
+And `libedit`.
 
 ### Updating headers in poudriere
 
